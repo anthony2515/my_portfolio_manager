@@ -14,8 +14,8 @@ function App() {
   const [jsonData, setJsonData] = useState([])
   const [addProject, setAddProject] = useState({})
   const [password,setPassword] = useState("")
-
-
+ 
+  console.log(jsonData)
   useEffect(() => {
     (async () => {
       // const response_Photo = await fetch("https://my-portfolio-server-eosin.vercel.app/api/v1/photo")
@@ -24,6 +24,7 @@ function App() {
       // const response_data = await fetch("https://my-portfolio-server-eosin.vercel.app/api/v1/about_me")
       const response_data = await fetch('http://localhost:3000/api/v1/data')
       const data = await response_data.json()
+      
       setRole(data.role)
       setAboutMe(data.about_me)
       setProjects(data.projects)
@@ -36,7 +37,7 @@ function App() {
       
     })()
   }, [])
-
+  
   function handleAboutMe(e) {
     const updateAboutMe = (jsonData.about_me = e.target.value)
     setAboutMe(updateAboutMe)
@@ -106,9 +107,10 @@ function App() {
   async function handleSave() {
     const obj = {
       ...jsonData,
-      password:password
+      password:password,
+      api_route:"save inputs"
     }
-    await fetch('http://localhost:3000/api/v1/data', {
+    const response = await fetch('http://localhost:3000/api/proxy', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,7 +118,12 @@ function App() {
       },
       body: JSON.stringify(obj),
     })
-   
+    const data = await response.json()
+    if(data.message){
+      alert(data.message)
+    }else{
+      alert(data.error)
+    }
     console.log(obj)
   }
 
@@ -133,18 +140,6 @@ function App() {
   function handlePasswordInput(e){
     setPassword(e.target.value)
   }
-
-
-  // async function handleAddProjectChange(e) {
-  //   const key = e.target.id
-  //   const { value } = e.target
-
-  //   setAddProject((prevState) => ({
-  //     ...prevState,
-  //     [key]: value,
-  //   }))
-  // }
-
 
   async function handleDeleteProject(index, imageName) {
     const obj = {
@@ -599,7 +594,10 @@ function App() {
           function handleChange(e) {
             const updateSoftSkills = [...softSkills]
             updateSoftSkills[index] = e.target.value
+            jsonData.skills[0].soft_skills[index] = e.target.value
             setSoftSkills(updateSoftSkills)
+            console.log("softskill",softSkills)
+           
           }
           return (
             <div key={index} className="softSkill_container">
@@ -717,8 +715,11 @@ function App() {
           )
         })}
       </div>
-      <button onClick={handleSave}>save</button>
-      <button>cancel</button>
+      <div className = "saveButton">
+        
+        <button onClick={handleSave}>Save the Inputs</button>
+      </div>
+      
     </>
   )
 }
