@@ -62,6 +62,10 @@ server.post(SOFT_SKILL_ROUTE,checkPasswordMiddleWare,async (req, res) => {
 # Tools Section
 
 ![alt text](image-9.png)
+
 This shows the table of inputs where I can edit a particular tool and description. By clicking the plus button it will show this modal to add another tool that I learn
 
 ![alt text](image-10.png)
+
+For deleting certain tool just click the x button and thats it
+
